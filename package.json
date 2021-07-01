@@ -1,0 +1,18 @@
+{
+  "name": "clash-fastest-proxy-selector",
+  "version": "1.0.0",
+  "description": "clash auto select fastest proxy tool",
+  "main": "bin/index.js",
+  "repository": "xxx",
+  "author": "liupeixin",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "build": "tsc",
+    "start": "node bin/index.js"
+  },
+  "devDependencies": {
+    "@types/node": "^15.12.5",
+    "typescript": "^4.3.5"
+  }
+}
