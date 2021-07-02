@@ -80,7 +80,7 @@ export const run = async () => {
 
     if (success) {
       console.log(
-        `Fasted Proxy Selected:\n${JSON.stringify(fastestProsy, null, 2)}`
+        `Fastest Proxy Selected:\n${JSON.stringify(fastestProsy, null, 2)}`
       );
     }
   } else {
