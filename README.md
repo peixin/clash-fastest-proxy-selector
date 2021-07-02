@@ -14,7 +14,10 @@ or
 
 - `clash-fastest-proxy`
 - `clash-fastest-proxy 🔰国外流量 127.0.0.1 9090 3000 https://www.google.com`
-
+- with `crontab` e.g. 
+```
+0 8-23/3 * * 1-5 echo "\n"`date`"\n----------------------------" >> ~/.config/clash/clash-fastest-proxy.log && ~/.asdf/shims/node ~/.config/yarn/global/node_modules/.bin/clash-fastest-proxy >> ~/.config/clash/clash-fastest-proxy.log 2>&1
+```
 
 
 ### Default Config
