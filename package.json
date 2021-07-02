@@ -3,16 +3,43 @@
   "version": "1.0.0",
   "description": "clash auto select fastest proxy tool",
   "main": "bin/index.js",
-  "repository": "xxx",
-  "author": "liupeixin",
+  "files": [
+    "bin/*"
+  ],
+  "bin": {
+    "clash-fastest-proxy": "./bin/clash-fastest-proxy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peixin/clash-fastest-proxy-selector.git"
+  },
+  "homepage": "https://github.com/peixin/clash-fastest-proxy-selector#readme",
+  "author": {
+    "name": "liupeixin",
+    "email": "fengyi.mail@gmail.com"
+  },
   "license": "MIT",
   "private": false,
+  "keywords": [
+    "Clash",
+    "ClashX",
+    "ClashX Pro",
+    "proxy",
+    "benchmark",
+    "fastest",
+    "selector",
+    "API"
+  ],
   "scripts": {
-    "build": "tsc",
-    "start": "node bin/index.js"
+    "build": "tsc && cp src/clash-fastest-proxy bin/clash-fastest-proxy",
+    "start": "node bin/index.js",
+    "prepack": "yarn run build"
   },
   "devDependencies": {
     "@types/node": "^15.12.5",
     "typescript": "^4.3.5"
+  },
+  "engines": {
+    "node": ">=12"
   }
 }

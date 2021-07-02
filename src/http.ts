@@ -1,5 +1,4 @@
 import http from "http";
-import fs from "fs";
 import { Config } from "./types";
 
 export default class HTTP {

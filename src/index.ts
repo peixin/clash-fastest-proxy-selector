@@ -1,42 +1,13 @@
 import HTTP from "./http";
-import fs from "fs";
-import path from "path";
-import os from "os";
 import { Config } from "./types";
 
-const configPath = path.join(
-  os.homedir(),
-  ".config",
-  "clash",
-  "clash-fastest-proxy-selector.json"
-);
-
-const getConfig = () => {
-  if (!fs.existsSync(configPath)) {
-    fs.writeFileSync(
-      configPath,
-      JSON.stringify(
-        {
-          selectorName: "🔰国外流量",
-          hostname: "127.0.0.1",
-          port: 9090,
-          delayCheckTimeout: 3000,
-          delayCheckURL: "https://www.google.com",
-        },
-        null,
-        2
-      )
-    );
-  }
-  const config = require(configPath) as Config;
-  console.log(`Config Path: ${configPath}`);
-  console.log(config);
-  console.log("");
-  console.log("");
-  return config;
+const config: Config = {
+  selectorName: "🔰国外流量",
+  hostname: "127.0.0.1",
+  port: 9090,
+  delayCheckTimeout: 3000,
+  delayCheckURL: "https://www.google.com",
 };
-
-const config = getConfig();
 const http = new HTTP(config);
 
 const getProxies = async () => {
@@ -74,7 +45,32 @@ const selectProxy = async (prosyName: string) => {
   });
 };
 
-const main = async () => {
+const init = () => {
+  let [selectorName, hostname, port, delayCheckTimeout, delayCheckURL] =
+    process.argv.slice(2);
+  if (selectorName) {
+    config.selectorName = selectorName;
+  }
+  if (hostname) {
+    config.hostname = hostname;
+  }
+  if (port) {
+    config.port = parseInt(port);
+  }
+  if (delayCheckTimeout) {
+    config.delayCheckTimeout = parseInt(delayCheckTimeout);
+  }
+  if (delayCheckURL) {
+    config.delayCheckURL = delayCheckURL;
+  }
+
+  console.log(config);
+  console.log("");
+  console.log("");
+};
+
+export const run = async () => {
+  init();
   const proxiesName = await getProxies();
   const delays = await checkDelay(proxiesName);
   const fastestProsy = getFastestProsy(delays);
@@ -95,5 +91,5 @@ const main = async () => {
 };
 
 if (require.main === module) {
-  main();
+  run();
 }
