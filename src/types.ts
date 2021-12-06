@@ -4,4 +4,5 @@ export interface Config {
   port: number;
   delayCheckTimeout: number;
   delayCheckURL: string;
+  excludeNodeNames?: string[];
 }
