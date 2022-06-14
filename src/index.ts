@@ -9,6 +9,7 @@ const config = {
   delayCheckTimeout: 3000,
   delayCheckURL: "https://www.google.com",
   excludeNodeNames: ["香港"],
+  proxyType: "Trojan",
 } as Config;
 
 const http = new HTTP(config);
@@ -19,7 +20,7 @@ const getProxies = async () => {
   }>(`/providers/proxies/${encodeURIComponent(config.selectorName)}`);
 
   return excludeProxies(
-    proxies.filter((proxy) => proxy.type === "Vmess").map((proxy) => proxy.name),
+    proxies.filter((proxy) => proxy.type === config.proxyType).map((proxy) => proxy.name),
     config.excludeNodeNames
   );
 };
@@ -88,6 +89,12 @@ const init = async () => {
       type: "string",
       alias: "u",
     },
+    "proxy-type": {
+      description: "proxy type Vmess or Trojan (default)",
+      default: config.proxyType,
+      type: "string",
+      alias: "pt",
+    },
 
     "exclude-node-names": {
       description: "exclude node names e.g. 香港",
@@ -103,11 +110,13 @@ const init = async () => {
     "delay-check-timeout": delayCheckTimeout,
     "delay-check-url": delayCheckURL,
     "exclude-node-names": excludeNodeNames,
+    "proxy-type": proxyType,
   } = argv;
 
   config.selectorName = selectorName;
   config.hostname = hostname;
   config.port = port;
+  config.proxyType = proxyType;
   config.delayCheckTimeout = delayCheckTimeout;
   config.delayCheckURL = delayCheckURL;
   config.excludeNodeNames = excludeNodeNames as string[] | undefined;

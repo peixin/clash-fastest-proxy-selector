@@ -15,7 +15,7 @@ or
 ### Usage
 - `clash-fastest-proxy --help`
 - `clash-fastest-proxy`
-- `clash-fastest-proxy -s 🔰国外流量 -h 127.0.0.1 -p 9090 -t 3000 -u https://www.google.com -e 香港`
+- `clash-fastest-proxy -s 🔰国外流量 -h 127.0.0.1 -p 9090 -t 3000 -u https://www.google.com -pt Trojan -e 香港`
 - with `crontab` e.g. 
 ```
 0 8-23/3 * * 1-5 echo "\n"`date`"\n----------------------------" >> ~/.config/clash/clash-fastest-proxy.log && ~/.asdf/shims/node ~/.config/yarn/global/node_modules/.bin/clash-fastest-proxy >> ~/.config/clash/clash-fastest-proxy.log 2>&1
