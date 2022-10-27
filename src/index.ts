@@ -1,26 +1,30 @@
 import HTTP from "./http";
-import { Config } from "./types";
+import { Config, ProxyType } from "./types";
 import yargs from "yargs";
 
 const config = {
-  selectorName: "🔰国外流量",
+  selectorName: "手动选择",
   hostname: "127.0.0.1",
   port: 9090,
   delayCheckTimeout: 3000,
   delayCheckURL: "https://www.google.com",
   excludeNodeNames: ["香港"],
-  proxyType: "Trojan",
+  proxyType: ["Trojan", "ShadowsocksR"],
 } as Config;
 
 const http = new HTTP(config);
 
 const getProxies = async () => {
   const { proxies } = await http.get<{
-    proxies: { name: string; type: string }[];
+    proxies: { name: string; type: ProxyType }[];
   }>(`/providers/proxies/${encodeURIComponent(config.selectorName)}`);
 
+  if (!proxies?.length) {
+    return [];
+  }
+
   return excludeProxies(
-    proxies.filter((proxy) => proxy.type === config.proxyType).map((proxy) => proxy.name),
+    proxies.filter((proxy) => config.proxyType.includes(proxy.type)).map((proxy) => proxy.name),
     config.excludeNodeNames
   );
 };

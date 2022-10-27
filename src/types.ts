@@ -5,5 +5,7 @@ export interface Config {
   delayCheckTimeout: number;
   delayCheckURL: string;
   excludeNodeNames?: string[];
-  proxyType: "Vmess" | "Trojan";
+  proxyType:  Array<ProxyType>;
 }
+
+export type ProxyType = "Vmess" | "Trojan" | "ShadowsocksR";
