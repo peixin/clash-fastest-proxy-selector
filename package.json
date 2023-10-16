@@ -1,6 +1,6 @@
 {
   "name": "clash-fastest-proxy-selector",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "clash auto select fastest proxy tool",
   "main": "bin/index.js",
   "files": [
@@ -33,17 +33,18 @@
   "scripts": {
     "build": "tsc && cp src/clash-fastest-proxy bin/clash-fastest-proxy",
     "start": "node bin/index.js",
-    "prepack": "yarn run build"
+    "prepack": "yarn run build",
+    "dev": "ts-node src/index.ts"
   },
   "devDependencies": {
-    "@types/node": "^15.12.5",
-    "@types/yargs": "^17.0.7",
-    "typescript": "^4.3.5"
+    "@types/node": "^20.8.6",
+    "@types/yargs": "^17.0.28",
+    "typescript": "^5.2.2"
   },
   "engines": {
     "node": ">=12"
   },
   "dependencies": {
-    "yargs": "^17.3.0"
+    "yargs": "^17.7.2"
   }
 }

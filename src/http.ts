@@ -9,11 +9,19 @@ export default class HTTP {
   }
 
   private getOptions() {
-    return {
+    const options = {
       hostname: this.config.hostname,
       port: this.config.port,
       timeout: this.config.delayCheckTimeout,
-    };
+    } as { [key: string]: number | string | object };
+
+    if (this.config.apiToken) {
+      options.headers = {
+        Authorization: `Bearer ${this.config.apiToken}`,
+      };
+    }
+
+    return options;
   }
 
   get<T>(path: string) {
@@ -27,14 +35,25 @@ export default class HTTP {
         res.on("end", () => {
           try {
             const resString = Buffer.concat(body).toString();
-            resolve(JSON.parse(resString));
+
+            if (res.statusCode?.toString().startsWith("4")) {
+              console.error("Clash API need Unauthorized:");
+              console.error("clash-fastest-proxy --api-token xxxxx");
+              reject("Clash API need Unauthorized");
+            } else {
+              resolve(JSON.parse(resString));
+            }
           } catch (error) {
+            console.error("get http error");
+            console.error(error);
             reject(error);
           }
         });
       });
 
       req.on("error", (error) => {
+        console.error("get http error");
+        console.error(error);
         reject(error);
       });
 
@@ -57,6 +76,7 @@ export default class HTTP {
       });
 
       req.on("error", (error) => {
+        console.error("put http error");
         console.error(error);
         reject(false);
       });

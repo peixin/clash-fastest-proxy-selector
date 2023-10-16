@@ -10,6 +10,7 @@ const config = {
   delayCheckURL: "https://www.google.com",
   excludeNodeNames: ["香港"],
   proxyType: ["Trojan", "ShadowsocksR"],
+  apiToken: undefined,
 } as Config;
 
 const http = new HTTP(config);
@@ -23,10 +24,7 @@ const getProxies = async () => {
     return [];
   }
 
-  return excludeProxies(
-    proxies.filter((proxy) => config.proxyType.includes(proxy.type)).map((proxy) => proxy.name),
-    config.excludeNodeNames
-  );
+  return excludeProxies(proxies.filter((proxy) => config.proxyType.includes(proxy.type)).map((proxy) => proxy.name));
 };
 
 const excludeProxies = (proxiesName: string[], excludes?: string[]) => {
@@ -94,16 +92,22 @@ const init = async () => {
       alias: "u",
     },
     "proxy-type": {
-      description: "proxy type Vmess or Trojan (default)",
+      description: "proxy type Vmess or Trojan or ShadowsocksR (default)",
       default: config.proxyType,
-      type: "string",
-      alias: "pt",
+      choices: ["Trojan", "Vmess", "ShadowsocksR"] as ProxyType[],
+      type: "array",
+      alias: "r",
     },
-
     "exclude-node-names": {
       description: "exclude node names e.g. 香港",
       type: "array",
       alias: "e",
+    },
+    "api-token": {
+      description: "clash api authorization",
+      default: config.apiToken,
+      type: "string",
+      alias: "a",
     },
   }).argv;
 
@@ -115,6 +119,7 @@ const init = async () => {
     "delay-check-url": delayCheckURL,
     "exclude-node-names": excludeNodeNames,
     "proxy-type": proxyType,
+    "api-token": apiToken,
   } = argv;
 
   config.selectorName = selectorName;
@@ -124,7 +129,9 @@ const init = async () => {
   config.delayCheckTimeout = delayCheckTimeout;
   config.delayCheckURL = delayCheckURL;
   config.excludeNodeNames = excludeNodeNames as string[] | undefined;
+  config.apiToken = apiToken;
 
+  console.log("config");
   console.log(config);
   console.log("\n\n");
 };
@@ -143,7 +150,9 @@ export const run = async () => {
     }
   } else {
     console.error(`No Proxy.`);
+    console.log("proxiesName");
     console.log(proxiesName);
+    console.log("delays");
     console.log(delays);
   }
 };
