@@ -1,6 +1,6 @@
 {
   "name": "clash-fastest-proxy-selector",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "clash auto select fastest proxy tool",
   "main": "bin/index.js",
   "files": [

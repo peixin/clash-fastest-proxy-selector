@@ -1,30 +1,42 @@
 import HTTP from "./http";
-import { Config, ProxyType } from "./types";
+import { Config } from "./types";
 import yargs from "yargs";
 
+const excludeProxyTypes = ["URLTest", "Direct", "Selector", "Reject", "Fallback"];
+
 const config = {
-  selectorName: "手动选择",
+  selectorName: "",
   hostname: "127.0.0.1",
   port: 9090,
   delayCheckTimeout: 3000,
   delayCheckURL: "https://www.google.com",
-  excludeNodeNames: ["香港"],
-  proxyType: ["Trojan", "ShadowsocksR"],
+  excludeNodeNames: undefined,
+  proxyType: undefined,
   apiToken: undefined,
 } as Config;
 
 const http = new HTTP(config);
 
 const getProxies = async () => {
+  if (!config.selectorName) {
+    console.error("No selector name.");
+    return [];
+  }
   const { proxies } = await http.get<{
-    proxies: { name: string; type: ProxyType }[];
+    proxies: { name: string; type: string }[];
   }>(`/providers/proxies/${encodeURIComponent(config.selectorName)}`);
 
-  if (!proxies?.length) {
+  let _proxies = proxies?.filter((proxy) => !excludeProxyTypes.includes(proxy.type));
+  if (!_proxies?.length) {
     return [];
   }
 
-  return excludeProxies(proxies.filter((proxy) => config.proxyType.includes(proxy.type)).map((proxy) => proxy.name));
+  _proxies = config.proxyType?.length ? _proxies.filter((proxy) => config.proxyType!.includes(proxy.type)) : _proxies;
+
+  return excludeProxies(
+    _proxies.map((proxy) => proxy.name),
+    config.excludeNodeNames
+  );
 };
 
 const excludeProxies = (proxiesName: string[], excludes?: string[]) => {
@@ -63,9 +75,9 @@ const init = async () => {
   const argv = await yargs.usage("Clash auto select fastest proxy tool").options({
     "selector-name": {
       description: "Clash group name",
-      default: config.selectorName,
       type: "string",
       alias: "s",
+      demandOption: true,
     },
     "host-name": {
       description: "Clash API host name",
@@ -92,9 +104,7 @@ const init = async () => {
       alias: "u",
     },
     "proxy-type": {
-      description: "proxy type Vmess or Trojan or ShadowsocksR (default)",
-      default: config.proxyType,
-      choices: ["Trojan", "Vmess", "ShadowsocksR"] as ProxyType[],
+      description: "proxy type to filter like Vmess or Trojan or ShadowsocksR",
       type: "array",
       alias: "r",
     },
@@ -125,7 +135,7 @@ const init = async () => {
   config.selectorName = selectorName;
   config.hostname = hostname;
   config.port = port;
-  config.proxyType = proxyType;
+  config.proxyType = proxyType as string[] | undefined;
   config.delayCheckTimeout = delayCheckTimeout;
   config.delayCheckURL = delayCheckURL;
   config.excludeNodeNames = excludeNodeNames as string[] | undefined;
